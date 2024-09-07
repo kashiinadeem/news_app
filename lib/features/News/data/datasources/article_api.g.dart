@@ -13,7 +13,9 @@ class _ArticleApi implements ArticleApi {
     this._dio, {
     this.baseUrl,
     this.errorLogger,
-  });
+  }) {
+    baseUrl ??= 'https://newsapi.org';
+  }
 
   final Dio _dio;
 
@@ -23,17 +25,18 @@ class _ArticleApi implements ArticleApi {
 
   @override
   Future<HttpResponse<dynamic>> getArticles({
-    required String? apiKey,
-    required String? country,
-    required String? category,
+    String? apiKey,
+    String? country,
+    String? category,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'apiKey': apiKey,
       r'country': country,
       r'category': category,
     };
-    final _headers = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{r'Authorization': apiKey};
+    _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<HttpResponse<dynamic>>(Options(
       method: 'GET',
@@ -42,7 +45,7 @@ class _ArticleApi implements ArticleApi {
     )
         .compose(
           Constants.dioOptions(),
-          'v2/top-headlines',
+          '/v2/top-headlines',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -59,17 +62,18 @@ class _ArticleApi implements ArticleApi {
 
   @override
   Future<HttpResponse<dynamic>> searchArticles({
-    required String? apiKey,
-    required String? query,
-    required String? category,
+    String? apiKey,
+    String? query,
+    String? category,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'apiKey': apiKey,
       r'q': query,
       r'category': category,
     };
-    final _headers = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{r'Authorization': apiKey};
+    _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<HttpResponse<dynamic>>(Options(
       method: 'GET',
@@ -78,7 +82,7 @@ class _ArticleApi implements ArticleApi {
     )
         .compose(
           Constants.dioOptions(),
-          'v2/top-headlines',
+          '/v2/top-headlines',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -95,17 +99,18 @@ class _ArticleApi implements ArticleApi {
 
   @override
   Future<HttpResponse<dynamic>> getSources({
-    required String? apiKey,
-    required String? country,
-    required String? category,
+    String? apiKey,
+    String? country,
+    String? category,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
-      r'apiKey': apiKey,
       r'country': country,
       r'category': category,
     };
-    final _headers = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{r'Authorization': apiKey};
+    _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<HttpResponse<dynamic>>(Options(
       method: 'GET',
@@ -114,7 +119,7 @@ class _ArticleApi implements ArticleApi {
     )
         .compose(
           Constants.dioOptions(),
-          'v2/top-headlines/sources',
+          '/v2/top-headlines/sources',
           queryParameters: queryParameters,
           data: _data,
         )

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -17,7 +18,7 @@ class ArticleRepositoryImp implements ArtcleRepository {
   Future<DataState<ArticleModel>> getArticles(
       {required String? country, required String? category}) async {
     try {
-      final apiKey = DotEnv().get('API_KEY');
+      final apiKey = dotenv.get('API_KEY');
 
       final data = await articleApi.getArticles(
           apiKey: apiKey, country: country, category: category);
@@ -37,14 +38,17 @@ class ArticleRepositoryImp implements ArtcleRepository {
   Future<DataState<List<SourceModel>>> getSources(
       {required String? country, required String? category}) async {
     try {
-      final apiKey = DotEnv().get('API_KEY');
+      final apiKey = dotenv.get('API_KEY');
+      log(apiKey);
 
       final data = await articleApi.getSources(
           country: country, category: category, apiKey: apiKey);
 
       if (data.response.statusCode == HttpStatus.ok) {
-        final List<dynamic> list = data.data;
-        final listSources = List<SourceModel>.from(list);
+        final List<dynamic> list = data.data['sources'];
+
+        final listSources =
+            list.map((source) => SourceModel.fromJson(source)).toList();
         return DataSuccess(listSources);
       } else {
         return DataError(data.data['message']);
@@ -58,7 +62,7 @@ class ArticleRepositoryImp implements ArtcleRepository {
   Future<DataState<ArticleModel>> searchArticles(
       {required String? query, required String? category}) async {
     try {
-      final apiKey = DotEnv().get('API_KEY');
+      final apiKey = dotenv.get('API_KEY');
 
       final data = await articleApi.searchArticles(
           query: query, category: category, apiKey: apiKey);

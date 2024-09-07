@@ -83,3 +83,11 @@ extension Fields on BuildContext {
 }
 
 extension BlocContextExtension on BuildContext {}
+
+extension ContextNavigationExt on BuildContext {
+  go({required Widget route}) =>
+      Navigator.of(this).push(MaterialPageRoute(builder: (context) => route));
+
+  replace({required Widget route}) => Navigator.of(this)
+      .pushReplacement(MaterialPageRoute(builder: (context) => route));
+}
