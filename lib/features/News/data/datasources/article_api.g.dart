@@ -32,7 +32,7 @@ class _ArticleApi implements ArticleApi {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'country': country,
-      r'category': category,
+      r'sources': category,
     };
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{r'Authorization': apiKey};
@@ -82,7 +82,7 @@ class _ArticleApi implements ArticleApi {
     )
         .compose(
           Constants.dioOptions(),
-          '/v2/top-headlines',
+          '/v2/everything',
           queryParameters: queryParameters,
           data: _data,
         )

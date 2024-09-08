@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/core/extensions/context.dart';
+import 'package:news_app/core/registery/dep_injections.dart';
 import 'package:news_app/features/News/presentation/bloc/news_bloc.dart';
 import 'package:news_app/newz_icons_icons.dart';
 
@@ -35,6 +36,17 @@ class NewzSources extends StatefulWidget {
 
 class _NewzSourcesState extends State<NewzSources> {
   String selectedCountry = 'us';
+
+  @override
+  void initState() {
+    BlocProvider.of<NewsBloc>(context).add(const GetArticlesSourcesEvent());
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

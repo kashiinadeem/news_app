@@ -20,8 +20,7 @@ class _NewzPageState extends State<NewzPage> {
   @override
   void initState() {
     pageController = PageController(initialPage: currentIndex);
-    final bloc = BlocProvider.of<NewsBloc>(context);
-    bloc.add(const GetArticlesSourcesEvent());
+
     super.initState();
   }
 

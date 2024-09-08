@@ -5,15 +5,24 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/core/extensions/context.dart';
 import 'package:news_app/core/registery/dep_injections.dart';
 import 'package:news_app/features/News/presentation/bloc/bloc.dart';
+import 'package:news_app/features/News/presentation/pages/factor_source_page.dart';
 import 'package:news_app/features/News/presentation/widgets/Body/headline_widget.dart';
+import 'package:news_app/features/News/presentation/widgets/Body/source_widget.dart';
 
 class NewzFeedPage extends StatelessWidget {
   const NewzFeedPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [NewzHeadlines()],
+    return ListView(
+      scrollDirection: Axis.vertical,
+      children: [
+        const NewzHeadlines(),
+        context.h10,
+        const SourceWidget(),
+        context.h10,
+        const FactorSourcePage()
+      ],
     );
   }
 }
@@ -68,9 +77,10 @@ class _NewzHeadlinesState extends State<NewzHeadlines> {
           articles.removeWhere((item) => item.urlToImage == null);
 
           return SizedBox(
-            height: 260,
+            height: 280,
             child: Padding(
-              padding: context.p20,
+              padding:
+                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
