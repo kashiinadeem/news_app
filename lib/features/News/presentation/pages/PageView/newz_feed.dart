@@ -9,55 +9,59 @@ import 'package:news_app/features/News/presentation/pages/factor_source_page.dar
 import 'package:news_app/features/News/presentation/widgets/Body/headline_widget.dart';
 import 'package:news_app/features/News/presentation/widgets/Body/source_widget.dart';
 
-class NewzFeedPage extends StatelessWidget {
+class NewzFeedPage extends StatefulWidget {
   const NewzFeedPage({super.key});
+
+  @override
+  State<NewzFeedPage> createState() => _NewzFeedPageState();
+}
+
+class _NewzFeedPageState extends State<NewzFeedPage> {
+  final headlineBloc = getIt<NewsBloc>();
+  final homeNewzBloc = getIt<NewsBloc>();
+
+  @override
+  void initState() {
+    headlineBloc.add(const GetArticlesEvent(country: 'us'));
+    homeNewzBloc.add(const SearchArticlesEvent(query: 'us'));
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    headlineBloc.close();
+    homeNewzBloc.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       scrollDirection: Axis.vertical,
       children: [
-        const NewzHeadlines(),
+        NewzHeadlines(
+          headlineBloc: headlineBloc,
+        ),
         context.h10,
         const SourceWidget(),
         context.h10,
-        const FactorSourcePage()
+        FactorSourcePage(
+          homeNewzBloc: homeNewzBloc,
+        )
       ],
     );
   }
 }
 
-class NewzHeadlines extends StatefulWidget {
-  const NewzHeadlines({super.key});
-
-  @override
-  State<NewzHeadlines> createState() => _NewzHeadlinesState();
-}
-
-class _NewzHeadlinesState extends State<NewzHeadlines> {
-  final bloc = getIt<NewsBloc>();
-
-  @override
-  void initState() {
-    bloc.add(const GetArticlesEvent(country: 'us'));
-    super.initState();
-  }
-
-  @override
-  void didUpdateWidget(covariant NewzHeadlines oldWidget) {
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void dispose() {
-    bloc.close();
-    super.dispose();
-  }
+class NewzHeadlines extends StatelessWidget {
+  final NewsBloc headlineBloc;
+  const NewzHeadlines({super.key, required this.headlineBloc});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<NewsBloc, NewsState>(
-      bloc: bloc,
+      bloc: headlineBloc,
       builder: (context, state) {
         if (state is NewsLoadingState) {
           return const Center(

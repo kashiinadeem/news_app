@@ -34,14 +34,26 @@ class HeadlineWidget extends StatelessWidget {
                           .createShader(bounds);
                     },
                     child: Image(
-                      width: context.width,
-                      // height: context.height,
-                      fit: BoxFit.cover,
-                      image: NetworkImage(article.urlToImage.toString()),
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Material();
-                      },
-                    ),
+                        width: context.width,
+                        // height: context.height,
+                        fit: BoxFit.cover,
+                        image: NetworkImage(article.urlToImage.toString()),
+                        errorBuilder: (context, error, stackTrace) {
+                          return Material(
+                            color: context.focus,
+                          );
+                        },
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child; // Image is fully loaded
+                          } else {
+                            // Show a loading indicator while the image is loading
+                            return LinearProgressIndicator(
+                              backgroundColor: context.scaffold,
+                              minHeight: context.height,
+                            );
+                          }
+                        }),
                   ),
                 ),
                 Padding(
