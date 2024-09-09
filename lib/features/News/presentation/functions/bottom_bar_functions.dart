@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app/newz_icons_icons.dart';
 
@@ -12,8 +13,8 @@ mixin BottomBarFunctions {
         activeIcon: Icon(NewzIcons.search),
         label: 'Newz Search'),
     const BottomNavigationBarItem(
-        icon: Icon(NewzIcons.heart_outlined),
-        activeIcon: Icon(NewzIcons.heart),
+        icon: Icon(CupertinoIcons.pin),
+        activeIcon: Icon(CupertinoIcons.pin_fill),
         label: 'Favourites'),
   ];
 }

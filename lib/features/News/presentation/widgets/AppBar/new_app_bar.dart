@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/core/extensions/context.dart';
-import 'package:news_app/core/registery/dep_injections.dart';
 import 'package:news_app/features/News/presentation/bloc/news_bloc.dart';
 import 'package:news_app/newz_icons_icons.dart';
 

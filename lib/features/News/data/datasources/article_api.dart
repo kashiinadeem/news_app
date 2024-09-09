@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:news_app/constants/constants.dart';

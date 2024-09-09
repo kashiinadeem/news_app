@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/core/extensions/context.dart';
 import 'package:news_app/core/registery/dep_injections.dart';
 import 'package:news_app/features/News/presentation/bloc/news_bloc.dart';
-import 'package:news_app/features/News/presentation/widgets/Body/headline_widget.dart';
 import 'package:news_app/features/News/presentation/widgets/Body/newz_feed_widget.dart';
 
 class SearchPage extends StatefulWidget {

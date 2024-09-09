@@ -9,7 +9,7 @@ Color newzSecondaryColor = const Color.fromARGB(255, 239, 255, 138);
 Color newzColorError = Colors.deepOrange;
 Color newzBottomSheetLight = const Color.fromARGB(255, 207, 241, 240);
 Color newzColorBlack = Colors.black;
-Color markColorFocus = const Color(0xFFF1F1F1);
+Color markColorFocus = const Color.fromARGB(255, 141, 141, 141);
 Color extraScaffoldColor = const Color(0xFFE0E8EF);
 
 // Dark Theme

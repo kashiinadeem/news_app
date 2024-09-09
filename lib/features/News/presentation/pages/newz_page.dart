@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/core/extensions/context.dart';
-import 'package:news_app/features/News/presentation/bloc/bloc.dart';
 import 'package:news_app/features/News/presentation/widgets/AppBar/new_app_bar.dart';
 import 'package:news_app/features/News/presentation/widgets/Body/newz_body.dart';
 import 'package:news_app/features/News/presentation/widgets/BottomBar/newz_bottom_bar.dart';

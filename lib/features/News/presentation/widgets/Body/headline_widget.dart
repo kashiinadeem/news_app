@@ -74,7 +74,7 @@ class HeadlineWidget extends StatelessWidget {
                           )),
                       Text(
                         article.title.toString(),
-                        style: context.h2?.copyWith(color: context.background),
+                        style: context.h1?.copyWith(color: context.background),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                       ),
