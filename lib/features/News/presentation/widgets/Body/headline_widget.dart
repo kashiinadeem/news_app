@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:news_app/core/extensions/context.dart';
 import 'package:news_app/features/News/data/models/article_model.dart';
@@ -13,7 +12,7 @@ class HeadlineWidget extends StatelessWidget {
     return InkWell(
       onTap: () => onArticleDetails(context: context, article: article),
       child: SizedBox(
-        width: context.width * 0.85,
+        width: context.width * 0.9,
         height: context.height,
         child: Material(
           child: Padding(
@@ -62,19 +61,9 @@ class HeadlineWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      IconButton(
-                          onPressed: onPinArticle,
-                          selectedIcon: Icon(
-                            CupertinoIcons.pin_fill,
-                            color: context.background,
-                          ),
-                          icon: Icon(
-                            CupertinoIcons.pin,
-                            color: context.background,
-                          )),
                       Text(
                         article.title.toString(),
-                        style: context.h1?.copyWith(color: context.background),
+                        style: context.h2?.copyWith(color: context.background),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                       ),

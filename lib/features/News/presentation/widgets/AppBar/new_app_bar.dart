@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news_app/containers/blocs.dart';
 import 'package:news_app/core/extensions/context.dart';
+import 'package:news_app/features/News/data/models/source_model.dart';
 import 'package:news_app/features/News/presentation/bloc/news_bloc.dart';
 import 'package:news_app/newz_icons_icons.dart';
 
@@ -11,17 +13,19 @@ class NewzAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppBar(
       toolbarHeight: 80,
-      title: Icon(
-        NewzIcons.newz,
-        color: context.primary,
-        size: 100,
+      title: Row(
+        children: [
+          Icon(
+            NewzIcons.newz,
+            color: context.primary,
+            size: 100,
+          ),
+          Padding(
+            padding: context.p10,
+            child: const NewzSources(),
+          )
+        ],
       ),
-      actions: [
-        Padding(
-          padding: context.p10,
-          child: const NewzSources(),
-        )
-      ],
     );
   }
 }
@@ -34,7 +38,7 @@ class NewzSources extends StatefulWidget {
 }
 
 class _NewzSourcesState extends State<NewzSources> {
-  String selectedCountry = 'us';
+  SourceModel? selectedCountry;
 
   @override
   void initState() {
@@ -56,7 +60,7 @@ class _NewzSourcesState extends State<NewzSources> {
         }
 
         if (state is SourcesLoadedState) {
-          var list = state.listSources ?? [];
+          var list = state.listSources?.toSet().toList() ?? [];
 
           if (list.isEmpty) {
             return const Center(
@@ -64,25 +68,25 @@ class _NewzSourcesState extends State<NewzSources> {
             );
           }
 
-          final countries =
-              list.map((source) => source.country).toList().toSet().toList();
-
           return SizedBox(
-            height: 40,
-            width: 120,
-            child: DropdownButtonFormField(
-                isDense: true,
+            width: 70,
+            child: DropdownButtonFormField<SourceModel>(
                 borderRadius: context.r10,
                 menuMaxHeight: context.height * 0.4,
-                decoration: const InputDecoration(
-                  filled: false,
-                  border: InputBorder.none,
-                ),
+                decoration: InputDecoration(
+                    filled: false,
+                    border: InputBorder.none,
+                    hintText: 'US',
+                    hintStyle: context.b1,
+                    constraints: BoxConstraints.loose(const Size(70, 40))),
                 value: selectedCountry,
-                items: countries
-                    .map((country) => DropdownMenuItem(
+                items: list
+                    .map((country) => DropdownMenuItem<SourceModel>(
                           value: country,
-                          child: Text(country.toString().toUpperCase()),
+                          child: Text(
+                            country.country.toString().toUpperCase(),
+                            style: context.b1,
+                          ),
                         ))
                     .toList(),
                 onChanged: onCountryChanged),
@@ -104,5 +108,8 @@ class _NewzSourcesState extends State<NewzSources> {
     setState(() {
       selectedCountry = value;
     });
+
+    final bloc = BlocProvider.of<SelectedCountry>(context);
+    bloc.add(value);
   }
 }

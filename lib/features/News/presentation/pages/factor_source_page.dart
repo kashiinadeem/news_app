@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:news_app/core/extensions/context.dart';
 import 'package:news_app/features/News/data/models/article_model.dart';
+import 'package:news_app/features/News/data/models/source_model.dart';
 import 'package:news_app/features/News/presentation/bloc/bloc.dart';
 import 'package:news_app/features/News/presentation/widgets/Body/newz_feed_widget.dart';
 
 class FactorSourcePage extends StatefulWidget {
   final NewsBloc homeNewzBloc;
+  final SourceModel? source;
+
   const FactorSourcePage({
     super.key,
     required this.homeNewzBloc,
+    this.source,
   });
 
   @override
@@ -25,11 +29,19 @@ class _FactorSourcePageState extends State<FactorSourcePage> {
 
   @override
   void initState() {
-    widget.homeNewzBloc.add(const SearchArticlesEvent(query: 'us'));
-
+    widget.homeNewzBloc
+        .add(SearchArticlesEvent(query: widget.source?.country ?? 'us'));
     scrollController.addListener(_onScroll);
     _loadMoreData();
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant FactorSourcePage oldWidget) {
+    allArticles.clear();
+    widget.homeNewzBloc
+        .add(SearchArticlesEvent(query: widget.source?.country ?? 'us'));
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -62,58 +74,64 @@ class _FactorSourcePageState extends State<FactorSourcePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<NewsBloc, NewsState>(
-      bloc: widget.homeNewzBloc,
-      builder: (context, state) {
-        if (state is NewsLoadedState) {
-          if (paginatedArticles.isEmpty) {
-            return const Center(
-              child: Text('List is Empty'),
+    return Padding(
+      padding: context.p20,
+      child: BlocConsumer<NewsBloc, NewsState>(
+        bloc: widget.homeNewzBloc,
+        builder: (context, state) {
+          if (state is NewsLoadingState) {
+            return const LinearProgressIndicator();
+          }
+
+          if (state is NewsLoadedState) {
+            if (paginatedArticles.isEmpty) {
+              return const Center(
+                child: Text('List is Empty'),
+              );
+            }
+
+            paginatedArticles.removeWhere((item) => item.urlToImage == null);
+
+            return Column(
+              children: [
+                ListView.separated(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    final article = paginatedArticles[index];
+                    return NewzFeedWidget(article: article);
+                  },
+                  separatorBuilder: (context, index) {
+                    return Divider(
+                      color: context.focus,
+                    );
+                  },
+                  itemCount: paginatedArticles.length,
+                ),
+                if (currentPage * pageSize < allArticles.length)
+                  SizedBox(
+                    height: 70,
+                    child: RawChip(
+                      onPressed: _loadMoreData,
+                      label: const Text("Load More"),
+                    ),
+                  ),
+              ],
             );
           }
 
-          paginatedArticles.removeWhere((item) => item.urlToImage == null);
-
-          return Column(
-            children: [
-              ListView.separated(
-                padding: context.p20,
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  final article = paginatedArticles[index];
-                  return NewzFeedWidget(article: article);
-                },
-                separatorBuilder: (context, index) {
-                  return Divider(
-                    color: context.focus,
-                  );
-                },
-                itemCount: paginatedArticles.length,
-              ),
-              if (currentPage * pageSize < allArticles.length)
-                SizedBox(
-                  height: 70,
-                  child: RawChip(
-                    onPressed: _loadMoreData,
-                    label: const Text("Load More"),
-                  ),
-                ),
-            ],
-          );
-        }
-
-        return Container();
-      },
-      listener: (BuildContext context, NewsState state) {
-        if (state is NewsLoadedState) {
-          final articles = state.articleModel?.articles ?? [];
-          for (var article in articles) {
-            allArticles.add(article);
+          return Container();
+        },
+        listener: (BuildContext context, NewsState state) {
+          if (state is NewsLoadedState) {
+            final articles = state.articleModel?.articles ?? [];
+            for (var article in articles) {
+              allArticles.add(article);
+            }
+            _loadMoreData();
           }
-          _loadMoreData();
-        }
-      },
+        },
+      ),
     );
   }
 }

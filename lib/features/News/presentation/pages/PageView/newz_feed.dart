@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news_app/containers/blocs.dart';
 import 'package:news_app/core/extensions/context.dart';
 import 'package:news_app/core/registery/dep_injections.dart';
 import 'package:news_app/features/News/data/models/article_model.dart';
+import 'package:news_app/features/News/data/models/source_model.dart';
 import 'package:news_app/features/News/presentation/bloc/bloc.dart';
 import 'package:news_app/features/News/presentation/pages/factor_source_page.dart';
 import 'package:news_app/features/News/presentation/widgets/Body/headline_widget.dart';
@@ -37,29 +39,36 @@ class _NewzFeedPageState extends State<NewzFeedPage> {
   }
 
   Widget buildBody() {
-    return SizedBox(
-      height: context.height,
-      child: ListView(
-        shrinkWrap: true,
-        children: [
-          NewzHeadlines(
-            headlineBloc: headlineBloc,
+    return BlocBuilder<SelectedCountry, SourceModel?>(
+      builder: (context, source) {
+        return SizedBox(
+          height: context.height,
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              NewzHeadlines(
+                headlineBloc: headlineBloc,
+                source: source,
+              ),
+              context.h10,
+              const SourceWidget(),
+              context.h10,
+              FactorSourcePage(
+                homeNewzBloc: homeNewzBloc,
+                source: source,
+              )
+            ],
           ),
-          context.h10,
-          const SourceWidget(),
-          context.h10,
-          FactorSourcePage(
-            homeNewzBloc: homeNewzBloc,
-          )
-        ],
-      ),
+        );
+      },
     );
   }
 }
 
 class NewzHeadlines extends StatefulWidget {
   final NewsBloc headlineBloc;
-  const NewzHeadlines({super.key, required this.headlineBloc});
+  final SourceModel? source;
+  const NewzHeadlines({super.key, required this.headlineBloc, this.source});
 
   @override
   State<NewzHeadlines> createState() => _NewzHeadlinesState();
@@ -74,10 +83,19 @@ class _NewzHeadlinesState extends State<NewzHeadlines> {
 
   @override
   void initState() {
-    widget.headlineBloc.add(const GetArticlesEvent(country: 'us'));
-
+    widget.headlineBloc
+        .add(GetArticlesEvent(country: widget.source?.country ?? 'us'));
     scrollController.addListener(_onScroll);
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant NewzHeadlines oldWidget) {
+    allArticles.clear();
+    widget.headlineBloc
+        .add(GetArticlesEvent(country: widget.source?.country ?? 'us'));
+    _loadMoreData();
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -110,31 +128,38 @@ class _NewzHeadlinesState extends State<NewzHeadlines> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<NewsBloc, NewsState>(
-      bloc: widget.headlineBloc,
-      builder: (context, state) {
-        if (state is NewsLoadingState) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-
-        if (state is NewsLoadedState) {
-          var articles = state.articleModel?.articles ?? [];
-
-          if (articles.isEmpty) {
-            return const Center(
-              child: Text('List is Empty'),
-            );
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+      child: BlocConsumer<NewsBloc, NewsState>(
+        bloc: widget.headlineBloc,
+        builder: (context, state) {
+          if (state is NewsLoadingState) {
+            return const LinearProgressIndicator();
           }
 
-          paginatedArticles.removeWhere((item) => item.urlToImage == null);
+          if (state is NewsLoadedState) {
+            var articles = state.articleModel?.articles ?? [];
 
-          return SizedBox(
-            height: 280,
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+            if (articles.isEmpty) {
+              return Center(
+                child: Material(
+                    color: Colors.deepOrange.shade50,
+                    // borderRadius: context.r10,
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          Text('No Healines To Show'),
+                        ],
+                      ),
+                    )),
+              );
+            }
+
+            paginatedArticles.removeWhere((item) => item.urlToImage == null);
+
+            return SizedBox(
+              height: 280,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,27 +185,27 @@ class _NewzHeadlinesState extends State<NewzHeadlines> {
                   ),
                 ],
               ),
-            ),
-          );
-        }
-
-        if (state is NewsErrorState) {
-          return Center(
-            child: Text(state.error.toString()),
-          );
-        }
-
-        return Container();
-      },
-      listener: (BuildContext context, NewsState state) {
-        if (state is NewsLoadedState) {
-          final articles = state.articleModel?.articles ?? [];
-          for (var article in articles) {
-            allArticles.add(article);
+            );
           }
-          _loadMoreData();
-        }
-      },
+
+          if (state is NewsErrorState) {
+            return Center(
+              child: Text(state.error.toString()),
+            );
+          }
+
+          return Container();
+        },
+        listener: (BuildContext context, NewsState state) {
+          if (state is NewsLoadedState) {
+            final articles = state.articleModel?.articles ?? [];
+            for (var article in articles) {
+              allArticles.add(article);
+            }
+            _loadMoreData();
+          }
+        },
+      ),
     );
   }
 }

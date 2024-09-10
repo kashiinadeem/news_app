@@ -12,9 +12,9 @@ mixin BottomBarFunctions {
         icon: Icon(NewzIcons.search_outlined),
         activeIcon: Icon(NewzIcons.search),
         label: 'Newz Search'),
-    const BottomNavigationBarItem(
-        icon: Icon(CupertinoIcons.pin),
-        activeIcon: Icon(CupertinoIcons.pin_fill),
-        label: 'Favourites'),
+    // const BottomNavigationBarItem(
+    //     icon: Icon(CupertinoIcons.pin),
+    //     activeIcon: Icon(CupertinoIcons.pin_fill),
+    //     label: 'Favourites'),
   ];
 }

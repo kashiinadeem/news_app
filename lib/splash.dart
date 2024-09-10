@@ -49,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen>
               child: Icon(
             NewzIcons.newz,
             color: context.background,
-            size: 100,
+            size: 150,
           ))
         ],
       ),

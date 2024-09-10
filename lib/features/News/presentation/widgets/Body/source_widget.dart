@@ -34,12 +34,12 @@ class _SourceWidgetState extends State<SourceWidget> {
               padding:
                   const EdgeInsets.symmetric(vertical: 0.0, horizontal: 20.0),
               child: SizedBox(
-                height: 200,
+                height: 100,
                 width: context.width,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: SizedBox(
-                    height: 200,
+                    height: 100,
                     width: 5000,
                     child: Wrap(
                       runSpacing: 0.0,
@@ -47,6 +47,9 @@ class _SourceWidgetState extends State<SourceWidget> {
                       direction: Axis.horizontal,
                       children: list
                           .map((source) => RawChip(
+                                backgroundColor:
+                                    context.focus?.withOpacity(0.1),
+                                side: context.sidenone,
                                 label: Text(source.name.toString()),
                                 onPressed: () => onMoveTofactorPage(source),
                               ))

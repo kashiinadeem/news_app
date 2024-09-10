@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
+import 'package:news_app/containers/blocs.dart';
 import 'package:news_app/features/News/data/datasources/article_api.dart';
 import 'package:news_app/features/News/data/repositories/article_repository_imp.dart';
 import 'package:news_app/features/News/domain/repositories/artcle_repository.dart';
@@ -25,4 +26,7 @@ Future<void> initailizeDep() async {
       CaseSearchArticles(repository: getIt()));
   getIt.registerSingleton<CaseGetSources>(CaseGetSources(repository: getIt()));
   getIt.registerFactory(() => NewsBloc(getIt(), getIt(), getIt()));
+
+  // Containers
+  getIt.registerFactory<SelectedCountry>(() => SelectedCountry());
 }

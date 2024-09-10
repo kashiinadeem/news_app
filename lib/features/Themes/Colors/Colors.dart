@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 // Light Theme
 
-Color newzScaffoldLight = const Color.fromARGB(255, 237, 240, 247);
+Color newzScaffoldLight = const Color.fromARGB(255, 255, 255, 255);
 Color newzColorWhite = Colors.white;
 Color newzColorPrimary = const Color(0xFF4F00BD);
-Color newzSecondaryColor = const Color.fromARGB(255, 239, 255, 138);
+Color newzSecondaryColor = const Color.fromARGB(255, 138, 140, 255);
 Color newzColorError = Colors.deepOrange;
 Color newzBottomSheetLight = const Color.fromARGB(255, 207, 241, 240);
 Color newzColorBlack = Colors.black;
